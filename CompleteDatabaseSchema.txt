@@ -15,9 +15,10 @@ CREATE TABLE ticket (
 	FOREIGN KEY (user_id) REFERENCES user_info(user_id),
 	reimbursement_type VARCHAR(50) NOT NULL,
 	reimbursement_amount NUMERIC(8,2) check(reimbursement_amount >= 0.00),
+	description VARCHAR(500) NOT NULL,
 	status VARCHAR(8) DEFAULT('pending') NOT NULL,
 	ticket_created TIMESTAMP WITHOUT TIME ZONE,
-	status_update TIMESTAMP WITHOUT TIME ZONE DEFAULT(null)
+	updates_upon_decision TIMESTAMP WITHOUT TIME ZONE DEFAULT(null)
 );
 
 INSERT INTO user_info(email, passw, first_name, last_name, address, role, created_on) VALUES
