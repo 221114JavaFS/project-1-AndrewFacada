@@ -1,0 +1,27 @@
+CREATE TABLE user_info(
+	user_id SERIAL PRIMARY KEY,
+	email VARCHAR(100) UNIQUE NOT NULL,
+	passw VARCHAR(100) NOT NULL,
+	first_name VARCHAR(30) NOT NULL,
+	last_name VARCHAR(30) NOT NULL,
+	address VARCHAR(100) NOT NULL,
+	role VARCHAR(8) DEFAULT('employee') NOT NULL,
+	created_on TIMESTAMP WITHOUT TIME ZONE
+);
+
+CREATE TABLE ticket (
+	ticket_id SERIAL PRIMARY KEY,
+	user_id INTEGER NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES user_info(user_id),
+	reimbursement_type VARCHAR(50) NOT NULL,
+	reimbursement_amount NUMERIC(8,2) check(reimbursement_amount >= 0.00),
+	status VARCHAR(8) DEFAULT('pending') NOT NULL,
+	ticket_created TIMESTAMP WITHOUT TIME ZONE,
+	status_update TIMESTAMP WITHOUT TIME ZONE DEFAULT(null)
+);
+
+INSERT INTO user_info(email, passw, first_name, last_name, address, role, created_on) VALUES
+	('andrewfacada@gmail.com', 'strongpassword', 'Andrew', 'Facada', '123 Main st. Bridgewater MA', 'manager', now());
+
+INSERT INTO ticket(user_id, reimbursement_type, reimbursement_amount, ticket_created) VALUES
+	(1, 'gas', 25.30, now());
