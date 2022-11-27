@@ -17,7 +17,8 @@ public class SignupLoginSignout {
 	}
 
 	
-	public static  void signup(Context ctx) throws SQLException {      //WORKS, BUT THROWS ERROR
+	public static  void signup(Context ctx) throws SQLException {      //WORKS
+		
 		PreparedStatement selectStmt = App.connect.prepareStatement  
 				("SELECT email FROM user_info WHERE email = ?");
 		String email = ctx.formParam("email");
@@ -40,7 +41,7 @@ public class SignupLoginSignout {
 			insertStmt.setString(3, firstName);
 			insertStmt.setString(4, lastName);
 			insertStmt.setString(5, address);
-			rs = insertStmt.executeQuery();
+			int rs2 = insertStmt.executeUpdate();
 			ctx.html("Account created under email: "+ email);
 		}
 	}{;
