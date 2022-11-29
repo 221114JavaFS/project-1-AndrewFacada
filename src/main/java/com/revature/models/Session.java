@@ -1,30 +1,20 @@
-package com.revature.session;
-
-import io.javalin.http.Context;
+package com.revature.models;
 
 public class Session {
+	
 	private static int id;
 	private static String email;
 	private static String firstName;
 	private static String lastName;
-	private static String role = "signed out";
-
+	private static String role;
+	
 	public Session() {
 		super();
 	}
+	
+	
+	
 
-	public static void session(Context ctx) {
-		if (Session.getRole().equals("signed out")) {
-			ctx.html("No one is currently logged in!");
-		} else {
-			ctx.html("Currently logged in as " + Session.getFirstName() + " " + Session.getLastName() + " with the role of " + Session.getRole() + " under the email: " + Session.getEmail());
-			
-		}
-	}
-	
-	
-	
-	
 	public static int getId() {
 		return id;
 	}
@@ -64,5 +54,7 @@ public class Session {
 	public static void setRole(String role) {
 		Session.role = role;
 	}
+	
+	
 
 }
