@@ -6,7 +6,7 @@ public class Session {
 	private static String email;
 	private static String firstName;
 	private static String lastName;
-	private static String role;
+	private static String role = "signed out";
 	
 	public Session() {
 		super();

@@ -22,5 +22,13 @@ public class UserService {
 	public String loggingOut() {
 		return userDao.signout();
 	}
+	
+	public String whoAmI() {
+		return userDao.session();
+	}
+	
+	public boolean newAccount(User user) {
+		return userDao.createAccount(user);
+	}
 
 }

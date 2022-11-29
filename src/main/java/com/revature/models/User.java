@@ -38,6 +38,10 @@ public class User {
 		this.lastName = lastName;
 		this.role = role;
 	}
+	
+	
+
+	
 
 	public User(String email, String password) {
 		super();

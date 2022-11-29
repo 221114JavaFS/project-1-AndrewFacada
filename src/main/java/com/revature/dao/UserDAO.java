@@ -15,4 +15,8 @@ public interface UserDAO {
 	public abstract boolean login(User user);
 	
 	public abstract String signout();
+	
+	public abstract String session();
+	
+	public abstract boolean createAccount(User user);
 }

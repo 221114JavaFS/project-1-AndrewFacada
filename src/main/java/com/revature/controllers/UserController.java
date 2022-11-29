@@ -14,9 +14,15 @@ public class UserController implements Controller{
 	private UserService userService = new UserService();
 	
 	Handler allUsers = (ctx) ->{
-		List<User> list = userService.getAllUsers();
-		ctx.json(list);
-		ctx.status(200);
+		if(Session.getRole().equals("manager")) {
+			List<User> list = userService.getAllUsers();
+			ctx.json(list);
+			ctx.status(200);
+		}else {
+			String temp = "You must be signed into a manager account to be able to view all users!";
+			ctx.json(temp);
+		}
+		
 	};
 	
 	Handler login = (ctx) ->{
@@ -36,12 +42,35 @@ public class UserController implements Controller{
 		ctx.json(userService.loggingOut());
 		ctx.status(200);
 	};
+	
+	Handler session = (ctx) ->{
+		ctx.json(userService.whoAmI());
+		ctx.status(200);
+	};
+	
+	Handler newUser = (ctx) ->{
+		User u = ctx.bodyAsClass(User.class);
+		
+		boolean createdOrNot = userService.newAccount(u);
+		if(createdOrNot == false) {
+			String temp = "An account already exists with that email!";
+			ctx.json(temp);
+			ctx.status(400);
+		}else if(createdOrNot == true){
+			String temp = "A new account has been created under the email: " + u.getEmail();
+			ctx.json(temp);
+			ctx.status(201);
+		}
+		
+	};
 
 	@Override
 	public void addRoutes(Javalin app) {
 		app.get("/users", allUsers);
 		app.get("/login", login);
 		app.get("/signout", signout);
+		app.get("/session", session);
+		app.post("/newuser", newUser);
 		
 	}
 

@@ -107,6 +107,46 @@ public class UserDAOImpl implements UserDAO{
 		}
 	}
 
+
+
+	@Override
+	public String session() {
+		if(Session.getRole().equals("signed out")) {
+			return "No one is currently signed in";
+		}else {
+			return "Signed in as " + Session.getFirstName() + " " + Session.getLastName() + " with the role of " + Session.getRole() + " under the email: " + Session.getEmail();
+		}
+	}
+
+
+
+	@Override
+	public boolean createAccount(User user) {
+		try(Connection connection = ConnectionUtil.getConnection()){
+			
+			PreparedStatement statement = connection.prepareStatement("SELECT email FROM user_info WHERE email = ?;");
+			statement.setString(1, user.getEmail());
+			ResultSet result = statement.executeQuery();
+			
+			if(!result.next()) {
+				PreparedStatement statementTwo = connection.prepareStatement("INSERT INTO user_info(email, passw, first_name, last_name, address, created_on) VALUES (?, ?, ?, ?, ?, now());");
+				statementTwo.setString(1, user.getEmail());
+				statementTwo.setString(2, user.getPassword());
+				statementTwo.setString(3, user.getFirstName());
+				statementTwo.setString(4, user.getLastName());
+				statementTwo.setString(5, "null");
+				int result2 = statementTwo.executeUpdate();
+				return true;
+			}
+			return false;
+				
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	
 
 }
