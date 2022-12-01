@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revature.models.Session;
+
 import com.revature.models.User;
 import com.revature.util.ConnectionUtil;
 
@@ -48,7 +48,7 @@ public class UserDAOImpl implements UserDAO{
 	
 	
 	@Override
-	public boolean login(User user) { //WORKS
+	public User login(User user) { //WORKS
 		try(Connection connection = ConnectionUtil.getConnection()){
 			
 			PreparedStatement statement =  connection.prepareStatement("Select user_id, email, passw, first_name, last_name, role FROM user_info WHERE email = ? AND passw = ?;");
@@ -57,68 +57,27 @@ public class UserDAOImpl implements UserDAO{
 			ResultSet result = statement.executeQuery();
 			
 			
-			
+			User a = new User();
 			if(result.next()) {
-				Session.setId(result.getInt("user_id"));
-				Session.setEmail(result.getString("email"));
-				Session.setFirstName(result.getString("first_name"));
-				Session.setLastName(result.getString("last_name"));
-				Session.setRole(result.getString("role"));	
-				return true;
+				a.setId(result.getInt("user_id"));
+				a.setEmail(result.getString("email"));
+				a.setFirstName(result.getString("first_name"));
+				a.setLastName(result.getString("last_name"));
+				a.setRole(result.getString("role"));
+				
+				
+				
+				return a;
 			}else {
-				return false;
+				return null;
 			}
 			
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		}
 	}
-	
-	
-	@Override
-	public User findCertainUser(String email) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean createUser(User user) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-
-	@Override
-	public String signout() {
-		if(Session.getEmail() == null) {
-			return "Someone must be signed in to be able to signout!";
-		}else {
-			String temp = Session.getEmail();
-			Session.setId(-1);
-			Session.setEmail(null);
-			Session.setFirstName(null);
-			Session.setLastName(null);
-			Session.setRole(null);
-			
-			return "Successfully signed out of: " + temp; 
-		}
-	}
-
-
-
-	@Override
-	public String session() {
-		if(Session.getRole().equals("signed out")) {
-			return "No one is currently signed in";
-		}else {
-			return "Signed in as " + Session.getFirstName() + " " + Session.getLastName() + " with the role of " + Session.getRole() + " under the email: " + Session.getEmail();
-		}
-	}
-
-
 
 	@Override
 	public boolean createAccount(User user) {

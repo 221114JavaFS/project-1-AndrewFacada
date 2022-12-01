@@ -8,15 +8,7 @@ public interface UserDAO {
 
 	public abstract List<User> findAllUsers();
 	
-	public abstract User findCertainUser(String email);
-	
-	public abstract boolean createUser(User user);
-	
-	public abstract boolean login(User user);
-	
-	public abstract String signout();
-	
-	public abstract String session();
+	public abstract User login(User user);
 	
 	public abstract boolean createAccount(User user);
 }

@@ -14,17 +14,9 @@ public class UserService {
 		return userDao.findAllUsers();
 	}
 	
-	public boolean loggingIn(User user) {
+	public User loggingIn(User user) {
 		return userDao.login(user);
 		
-	}
-	
-	public String loggingOut() {
-		return userDao.signout();
-	}
-	
-	public String whoAmI() {
-		return userDao.session();
 	}
 	
 	public boolean newAccount(User user) {

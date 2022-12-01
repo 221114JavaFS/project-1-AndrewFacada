@@ -2,33 +2,58 @@ package com.revature.controllers;
 
 import java.util.List;
 
-import com.revature.models.Session;
+
 import com.revature.models.User;
 import com.revature.services.UserService;
 
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
+import jakarta.servlet.http.HttpSession;
 
 public class UserController implements Controller{
 	
+	static HttpSession sess;
+	private String tempEmail;
+	private String tempRole;
+	
+	
 	private UserService userService = new UserService();
 	
+	
 	Handler allUsers = (ctx) ->{
-		if(Session.getRole().equals("manager")) {
+		if(tempRole == null) {
+			
+			if(tempRole != null && sess.getAttribute("role").equals("employee")) {
+				String temp = "You must be signed into a manager account to be able to view all users!";
+				ctx.json(temp);
+			}
+				
+			String temp = "You must be signed into a manager account to be able to view all users!";
+			ctx.json(temp);
+			
+			
+		}else {
 			List<User> list = userService.getAllUsers();
 			ctx.json(list);
 			ctx.status(200);
-		}else {
-			String temp = "You must be signed into a manager account to be able to view all users!";
-			ctx.json(temp);
 		}
 		
 	};
 	
-	Handler login = (ctx) ->{
+	Handler login = (ctx) ->{ //need to make it so cannot login when already logged in
 		User u = ctx.bodyAsClass(User.class);
-		if(userService.loggingIn(u)) {
-			String info = "Successfully logged in under email: " + Session.getEmail();
+		if(userService.loggingIn(u) != null) {
+			sess = ctx.req().getSession();
+			tempEmail = "not null";
+			tempRole = "not null";
+			sess.setAttribute("id", userService.loggingIn(u).getId());
+			sess.setAttribute("email", userService.loggingIn(u).getEmail());
+			sess.setAttribute("firstName", userService.loggingIn(u).getFirstName());
+			sess.setAttribute("lastName", userService.loggingIn(u).getLastName());
+			sess.setAttribute("role", userService.loggingIn(u).getRole());
+			
+			
+			String info = "Successfully logged in under email: " + sess.getAttribute("email");
 			ctx.json(info);
 			ctx.status(201);
 		}else {
@@ -39,13 +64,30 @@ public class UserController implements Controller{
 	};
 	
 	Handler signout = (ctx) ->{
-		ctx.json(userService.loggingOut());
-		ctx.status(200);
+		if(tempEmail != null) {
+			ctx.json("Successfully signed out of: " + sess.getAttribute("email"));
+			sess.setAttribute("id", null);
+			sess.setAttribute("email", null);
+			sess.setAttribute("firstName", null);
+			sess.setAttribute("lastName", null);
+			sess.setAttribute("role", null);
+			ctx.status(200);
+		}else {
+			ctx.json("Someone must be signed in to signout");
+			ctx.status(400);
+		}
 	};
 	
 	Handler session = (ctx) ->{
-		ctx.json(userService.whoAmI());
-		ctx.status(200);
+		if(tempEmail == null) {
+			ctx.json("No one is currently signed in!");
+			//ctx.status(); find correct status
+		}else {
+			ctx.json("Signed in as " + sess.getAttribute("firstName") + " " + sess.getAttribute("lastName") + " with the role of " + sess.getAttribute("role") + " under the email: " + sess.getAttribute("email"));
+			ctx.status(200);
+		}
+		
+		
 	};
 	
 	Handler newUser = (ctx) ->{
