@@ -106,6 +106,35 @@ public class UserDAOImpl implements UserDAO{
 		}
 	}
 
+
+
+	@Override
+	public User updateRole(User user) {
+		try(Connection connection = ConnectionUtil.getConnection()){
+			PreparedStatement statement = connection.prepareStatement("SELECT email, role FROM user_info WHERE email = ? AND role = ?;");
+			statement.setString(1, user.getEmail());
+			statement.setString(2, user.getRole());
+			ResultSet result = statement.executeQuery();
+			
+			if(result.next()) {
+				PreparedStatement statementTwo = connection.prepareStatement("UPDATE user_info SET role = 'manager' WHERE email = ?;");
+				statementTwo.setString(1, user.getEmail());
+				int  resultTwo = statementTwo.executeUpdate();
+				
+				User a = new User();
+				a.setEmail(user.getEmail());
+				a.setRole("manager");
+				
+				return a;
+			}
+			
+			return null;
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	
 
 }

@@ -11,4 +11,6 @@ public interface UserDAO {
 	public abstract User login(User user);
 	
 	public abstract boolean createAccount(User user);
+	
+	public abstract User updateRole(User user);
 }

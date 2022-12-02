@@ -22,5 +22,9 @@ public class UserService {
 	public boolean newAccount(User user) {
 		return userDao.createAccount(user);
 	}
+	
+	public User promoteRole(User user) {
+		return userDao.updateRole(user);
+	}
 
 }

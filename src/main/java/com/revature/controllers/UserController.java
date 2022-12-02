@@ -28,7 +28,7 @@ public class UserController implements Controller{
 				ctx.json(temp);
 			}
 				
-			String temp = "You must be signed into a manager account to be able to view all users!";
+			String temp = "You must be signed into a manager account to view all users!";
 			ctx.json(temp);
 			
 			
@@ -105,6 +105,38 @@ public class UserController implements Controller{
 		}
 		
 	};
+	
+	Handler roleUpdate = (ctx) ->{  
+		if(tempRole != null) {
+		
+			if(sess.getAttribute("role").equals("manager")) {
+				User u = ctx.bodyAsClass(User.class);
+				
+				User updatedUser = userService.promoteRole(u);
+				
+				if(updatedUser != null) {
+					ctx.json(u.getEmail() + " has been updated to the role of manager!");
+					ctx.status(200);
+				}else {
+					ctx.json("Are you sure that this account exists and that it has the role of employee?");
+					ctx.status(400);
+				}
+			}else {
+				ctx.json("You must be a manager to promote an employee");
+				ctx.status(400);
+			}
+		
+		
+			
+			
+			
+		}else {
+			ctx.json("You must be logged in and have the role of manager to use this function!");
+			ctx.status(400);
+		}
+		
+		
+	};
 
 	@Override
 	public void addRoutes(Javalin app) {
@@ -113,6 +145,7 @@ public class UserController implements Controller{
 		app.get("/signout", signout);
 		app.get("/session", session);
 		app.post("/newuser", newUser);
+		app.patch("/promote",roleUpdate);
 		
 	}
 

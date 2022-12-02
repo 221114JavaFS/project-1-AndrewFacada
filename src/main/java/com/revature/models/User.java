@@ -48,6 +48,13 @@ public class User {
 		this.email = email;
 		this.password = password;
 	}
+	
+	public User(int id,String email, String role) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.role = role;
+	}
 
 	public User() {
 		super();
