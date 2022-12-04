@@ -14,6 +14,10 @@ public class TicketService {
 		return ticketDao.findAllMyTickets(id);
 	}
 	
+	public String createTicket(Ticket ticket, int id) {
+		return ticketDao.createTicket(ticket, id);
+	}
+	
 	
 
 

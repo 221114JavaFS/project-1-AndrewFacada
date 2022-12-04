@@ -50,8 +50,24 @@ public class TicketDAOImpl implements TicketDAO{
 		}
 	}
 	
+	
+	
 	@Override
-	public String createTicket(Ticket ticket) {
+	public String createTicket(Ticket ticket, int id) {
+		try(Connection connection = ConnectionUtil.getConnection()){
+			PreparedStatement statement = connection.prepareStatement("INSERT INTO ticket(user_id, reimbursement_type, reimbursement_amount, description , ticket_created) VALUES (?, ?, ?, ?, now());");
+			statement.setInt(1,id);
+			statement.setString(2, ticket.getReimbursementType());
+			statement.setDouble(3, ticket.getAmount());
+			statement.setString(4, ticket.getDescription());
+			int result = statement.executeUpdate();
+			
+			return "Ticket created!";
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return "Ticket not created!";
+		}
 		
 	}
 

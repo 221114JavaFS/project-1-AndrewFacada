@@ -39,6 +39,15 @@ public class Ticket {
 		this.description = description;
 		this.status = status;
 	}
+	
+	
+
+	public Ticket(String reimbursementType, double amount, String description) {
+		super();
+		this.reimbursementType = reimbursementType;
+		this.amount = amount;
+		this.description = description;
+	}
 
 	public Ticket() {
 		super();

@@ -8,7 +8,7 @@ public interface TicketDAO {
 	
 	public abstract List<Ticket> findAllMyTickets(int id);
 	
-	public abstract String createTicket(Ticket ticket);
+	public abstract String createTicket(Ticket ticket, int id);
 	
 	public abstract String decideOnTicket(Ticket ticket);
 

@@ -182,6 +182,14 @@ public class UserAndTicketController implements Controller{
 	};
 	
 	
+	Handler createTicket = (ctx) ->{ //need to limit and check if fields are filled
+		Ticket ticket = ctx.bodyAsClass(Ticket.class);
+		int id = (int) sess.getAttribute("id");
+		
+		ctx.json(ticketService.createTicket(ticket, id));
+	};
+	
+	
 	
 	
 	
@@ -197,6 +205,7 @@ public class UserAndTicketController implements Controller{
 		app.patch("/promote",roleUpdate);
 		//TICKET
 		app.get("/mytickets", checkMyTickets);
+		app.post("/createticket", createTicket);
 		
 		
 	}
