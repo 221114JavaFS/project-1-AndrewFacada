@@ -2,24 +2,27 @@ package com.revature.controllers;
 
 import java.util.List;
 
-
+import com.revature.dao.TicketDAO;
+import com.revature.models.Ticket;
 import com.revature.models.User;
+import com.revature.services.TicketService;
 import com.revature.services.UserService;
 
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
 import jakarta.servlet.http.HttpSession;
 
-public class UserController implements Controller{
+public class UserAndTicketController implements Controller{
 	
 	static HttpSession sess;
-	private String tempEmail;
+	private static String tempEmail;
 	private String tempRole;
 	
 	
 	private UserService userService = new UserService();
+	private TicketService ticketService = new TicketService();
 	
-	
+	//USER
 	Handler allUsers = (ctx) ->{
 		if(tempRole == null) {
 			
@@ -40,6 +43,7 @@ public class UserController implements Controller{
 		
 	};
 	
+	//USER
 	Handler login = (ctx) ->{ //need to make it so cannot login when already logged in
 		User u = ctx.bodyAsClass(User.class);
 		if(userService.loggingIn(u) != null) {
@@ -63,6 +67,8 @@ public class UserController implements Controller{
 		}
 	};
 	
+	
+	//USER
 	Handler signout = (ctx) ->{
 		if(tempEmail != null) {
 			ctx.json("Successfully signed out of: " + sess.getAttribute("email"));
@@ -78,6 +84,8 @@ public class UserController implements Controller{
 		}
 	};
 	
+	
+	//USER
 	Handler session = (ctx) ->{
 		if(tempEmail == null) {
 			ctx.json("No one is currently signed in!");
@@ -90,6 +98,8 @@ public class UserController implements Controller{
 		
 	};
 	
+	
+	//USER
 	Handler newUser = (ctx) ->{
 		User u = ctx.bodyAsClass(User.class);
 		
@@ -106,6 +116,8 @@ public class UserController implements Controller{
 		
 	};
 	
+	
+	//USER
 	Handler roleUpdate = (ctx) ->{  
 		if(tempRole != null) {
 		
@@ -137,15 +149,55 @@ public class UserController implements Controller{
 		
 		
 	};
+	
+	
+	
+	Handler checkMyTickets = (ctx) ->{
+		if(tempRole != null) {
+			
+			
+			if(sess.getAttribute("id") != null) {
+				
+				int id = (int) sess.getAttribute("id");
+				
+				
+				if(ticketService.seeMyTickets(id) != null) {
+					ctx.json(ticketService.seeMyTickets(id));
+					
+					
+				}else {
+					ctx.json("You have not submitted any tickets!");
+				}
+				
+				
+			}else {
+				ctx.json("You must be logged in to view your tickets!");
+			}
+			
+			
+			
+		}else {
+			ctx.json("You must be logged in to view your tickets!");
+		}
+	};
+	
+	
+	
+	
+	
 
 	@Override
 	public void addRoutes(Javalin app) {
+		//USER
 		app.get("/users", allUsers);
 		app.get("/login", login);
 		app.get("/signout", signout);
 		app.get("/session", session);
 		app.post("/newuser", newUser);
 		app.patch("/promote",roleUpdate);
+		//TICKET
+		app.get("/mytickets", checkMyTickets);
+		
 		
 	}
 
