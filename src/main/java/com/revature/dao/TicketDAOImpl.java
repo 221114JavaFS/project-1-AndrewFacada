@@ -72,8 +72,39 @@ public class TicketDAOImpl implements TicketDAO{
 	}
 
 	@Override
-	public String decideOnTicket(Ticket ticket) {
-		
+	public String decideOnTicket(Ticket ticket, int id) {
+		try(Connection connection = ConnectionUtil.getConnection()){
+			PreparedStatement statementCheckOne = connection.prepareStatement("SELECT * FROM ticket WHERE ticket_id = ?;");
+			statementCheckOne.setInt(1,ticket.getTicketid());
+			ResultSet resultOne = statementCheckOne.executeQuery();
+			if(!resultOne.next()) {
+				return "There are no tickets with that ticket id!";
+			}
+			
+			
+			PreparedStatement statementCheckTwo = connection.prepareStatement("SELECT status FROM ticket WHERE ticket_id = ?;");
+			statementCheckTwo.setInt(1,ticket.getTicketid());
+			ResultSet resultTwo = statementCheckTwo.executeQuery();
+			if(resultTwo.next()) {
+				if(!resultTwo.getString("status").equals("pending")) {
+					return "Cannot change the status of already approved/declined tickets!";
+				}
+			}
+			
+			
+			PreparedStatement statement = connection.prepareStatement("UPDATE ticket SET status = ?, updates_upon_decision = now() WHERE ticket_id = ?;");
+			statement.setString(1,ticket.getStatus());
+			statement.setInt(2,ticket.getTicketid());
+			int result = statement.executeUpdate();
+			return "The ticket status has been updated to " + ticket.getStatus() + " for ticket id: " + ticket.getTicketid();
+			
+			
+			
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return "Ticket not updated!";
+		}
 	}
 
 

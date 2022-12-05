@@ -241,6 +241,31 @@ public class UserAndTicketController implements Controller{
 	
 	
 	
+	Handler updateTicketStatus = (ctx) ->{
+		Ticket ticket = ctx.bodyAsClass(Ticket.class);
+		if(tempRole != null) {
+			if(sess.getAttribute("role").equals("manager")) {
+				if(sess.getAttribute("id").equals(ticket.getUserid())) {
+					ctx.json("You cannot update the status of your own tickets!");
+				}else {
+					int id = (int) sess.getAttribute("id");
+					ctx.json(ticketService.makeDecisionOnTicket(ticket, id));
+				}
+				
+				
+				
+				
+			}else {
+				ctx.json("You must be logged in to a manager account to be able to update the status of tickets!");
+			}
+		}else {
+			ctx.json("You must be logged in to a manager account to be able to update the status of tickets!");
+		}
+		
+	};
+	
+	
+	
 	
 	
 
@@ -259,6 +284,7 @@ public class UserAndTicketController implements Controller{
 		app.get("/pendingtickets", seeMyPendingTickets);
 		app.get("/approvedtickets", seeMyApprovedTickets);
 		app.get("/declinedtickets", seeMyDeclinedTickets);
+		app.patch("/decideonticket",updateTicketStatus);
 		
 		
 	}

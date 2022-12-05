@@ -12,10 +12,10 @@ public interface TicketDAO {
 	
 	public abstract List<Ticket> findMyApprovedTickets(int id); //done
 	
-	public abstract List<Ticket> findMyDeclinedTickets(int id); 
+	public abstract List<Ticket> findMyDeclinedTickets(int id); //done
 	
 	public abstract String createTicket(Ticket ticket, int id); //done
 	
-	public abstract String decideOnTicket(Ticket ticket);
+	public abstract String decideOnTicket(Ticket ticket, int id);
 
 }

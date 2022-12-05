@@ -1,6 +1,7 @@
 package com.revature.models;
 
 public class Ticket {
+	private int userid;
 	private int ticketid;
 	private String reimbursementType;
 	private double amount;
@@ -31,6 +32,13 @@ public class Ticket {
 	
 	
 	
+	public Ticket(int ticketid, int userid , String status) {
+		super();
+		this.ticketid = ticketid;
+		this.userid = userid;
+		this.status = status;
+	}
+
 	public Ticket(int ticketid, String reimbursementType, double amount, String description, String status) {
 		super();
 		this.ticketid = ticketid;
@@ -90,6 +98,14 @@ public class Ticket {
 	
 	
 	
+
+	public int getUserid() {
+		return userid;
+	}
+
+	public void setUserid(int userId) {
+		this.userid = userId;
+	}
 
 	@Override
 	public int hashCode() {

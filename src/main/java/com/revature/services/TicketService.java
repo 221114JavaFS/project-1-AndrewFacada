@@ -30,6 +30,10 @@ public class TicketService {
 		return ticketDao.findMyDeclinedTickets(id);
 	}
 	
+	public String makeDecisionOnTicket(Ticket ticket, int id) {
+		return ticketDao.decideOnTicket(ticket, id);
+	}
+	
 	
 
 
