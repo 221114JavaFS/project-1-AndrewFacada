@@ -189,6 +189,56 @@ public class UserAndTicketController implements Controller{
 		ctx.json(ticketService.createTicket(ticket, id));
 	};
 	
+	Handler seeMyPendingTickets = (ctx) ->{
+		if(tempRole != null) {
+			if(sess.getAttribute("id") != null) {
+				int id = (int) sess.getAttribute("id");
+				
+				if(ticketService.seeMyPendingTickets(id) == null) {
+					ctx.json("You have no pending tickets!");
+				}else {
+					ctx.json(ticketService.seeMyPendingTickets(id));
+				}
+			}
+		}else {
+			ctx.json("You must be logged in to view your pending tickets!");
+		}
+	};
+	
+	
+	Handler seeMyApprovedTickets = (ctx) ->{
+		if(tempRole != null) {
+			if(sess.getAttribute("id") != null) {
+				int id = (int) sess.getAttribute("id");
+				
+				if(ticketService.seeMyApprovedTickets(id) == null) {
+					ctx.json("You have no approved tickets!");
+				}else {
+					ctx.json(ticketService.seeMyApprovedTickets(id));
+				}
+			}
+		}else {
+			ctx.json("You must be logged in to view your approved tickets!");
+		}
+	};
+	
+	
+	Handler seeMyDeclinedTickets = (ctx) ->{
+		if(tempRole != null) {
+			if(sess.getAttribute("id") != null) {
+				int id = (int) sess.getAttribute("id");
+				
+				if(ticketService.seeMyDeclinedTickets(id) == null) {
+					ctx.json("You have no declined tickets!");
+				}else {
+					ctx.json(ticketService.seeMyDeclinedTickets(id));
+				}
+			}
+		}else {
+			ctx.json("You must be logged in to view your declined tickets!");
+		}
+	};
+	
 	
 	
 	
@@ -206,6 +256,9 @@ public class UserAndTicketController implements Controller{
 		//TICKET
 		app.get("/mytickets", checkMyTickets);
 		app.post("/createticket", createTicket);
+		app.get("/pendingtickets", seeMyPendingTickets);
+		app.get("/approvedtickets", seeMyApprovedTickets);
+		app.get("/declinedtickets", seeMyDeclinedTickets);
 		
 		
 	}

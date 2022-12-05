@@ -76,4 +76,103 @@ public class TicketDAOImpl implements TicketDAO{
 		
 	}
 
+
+
+	@Override
+	public List<Ticket> findMyPendingTickets(int id) {
+		try(Connection connection = ConnectionUtil.getConnection()){
+			PreparedStatement statement = connection.prepareStatement("SELECT * FROM ticket WHERE user_id = ? AND status = 'pending';");
+			statement.setInt(1, id);
+			ResultSet result = statement.executeQuery();
+			
+			List<Ticket> list = new ArrayList<>();
+			while(result.next()) {
+				Ticket ticket = new Ticket();
+				ticket.setTicketid(result.getInt("ticket_id"));
+				ticket.setReimbursementType(result.getString("reimbursement_type"));
+				ticket.setAmount(result.getDouble("reimbursement_amount"));
+				ticket.setDescription(result.getString("description"));
+				ticket.setStatus(result.getString("status"));
+				ticket.setTimeCreated(result.getString("ticket_created"));
+				
+				list.add(ticket);
+			}
+			
+			if(list.isEmpty()) {
+				return null;
+			}
+			return list;
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+
+	@Override
+	public List<Ticket> findMyApprovedTickets(int id) {
+		try(Connection connection = ConnectionUtil.getConnection()){
+			PreparedStatement statement = connection.prepareStatement("SELECT * FROM ticket WHERE user_id = ? AND status = 'approved';");
+			statement.setInt(1, id);
+			ResultSet result = statement.executeQuery();
+			
+			List<Ticket> list = new ArrayList<>();
+			while(result.next()) {
+				Ticket ticket = new Ticket();
+				ticket.setTicketid(result.getInt("ticket_id"));
+				ticket.setReimbursementType(result.getString("reimbursement_type"));
+				ticket.setAmount(result.getDouble("reimbursement_amount"));
+				ticket.setDescription(result.getString("description"));
+				ticket.setStatus(result.getString("status"));
+				ticket.setTimeCreated(result.getString("ticket_created"));
+				
+				list.add(ticket);
+			}
+			
+			if(list.isEmpty()) {
+				return null;
+			}
+			return list;
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+
+	@Override
+	public List<Ticket> findMyDeclinedTickets(int id) {
+		try(Connection connection = ConnectionUtil.getConnection()){
+			PreparedStatement statement = connection.prepareStatement("SELECT * FROM ticket WHERE user_id = ? AND status = 'declined';");
+			statement.setInt(1, id);
+			ResultSet result = statement.executeQuery();
+			
+			List<Ticket> list = new ArrayList<>();
+			while(result.next()) {
+				Ticket ticket = new Ticket();
+				ticket.setTicketid(result.getInt("ticket_id"));
+				ticket.setReimbursementType(result.getString("reimbursement_type"));
+				ticket.setAmount(result.getDouble("reimbursement_amount"));
+				ticket.setDescription(result.getString("description"));
+				ticket.setStatus(result.getString("status"));
+				ticket.setTimeCreated(result.getString("ticket_created"));
+				
+				list.add(ticket);
+			}
+			
+			if(list.isEmpty()) {
+				return null;
+			}
+			return list;
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

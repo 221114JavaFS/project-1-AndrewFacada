@@ -18,6 +18,18 @@ public class TicketService {
 		return ticketDao.createTicket(ticket, id);
 	}
 	
+	public List<Ticket> seeMyPendingTickets(int id){
+		return ticketDao.findMyPendingTickets(id);
+	}
+	
+	public List<Ticket> seeMyApprovedTickets(int id){
+		return ticketDao.findMyApprovedTickets(id);
+	}
+	
+	public List<Ticket> seeMyDeclinedTickets(int id){
+		return ticketDao.findMyDeclinedTickets(id);
+	}
+	
 	
 
 
