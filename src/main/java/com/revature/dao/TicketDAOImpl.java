@@ -95,7 +95,7 @@ public class TicketDAOImpl implements TicketDAO{
 			PreparedStatement statement = connection.prepareStatement("UPDATE ticket SET status = ?, updates_upon_decision = now() WHERE ticket_id = ?;");
 			statement.setString(1,ticket.getStatus());
 			statement.setInt(2,ticket.getTicketid());
-			int result = statement.executeUpdate();
+			int resultThree = statement.executeUpdate();
 			return "The ticket status has been updated to " + ticket.getStatus() + " for ticket id: " + ticket.getTicketid();
 			
 			
