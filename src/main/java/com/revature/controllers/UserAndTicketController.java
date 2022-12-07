@@ -259,6 +259,20 @@ public class UserAndTicketController implements Controller {
 		}
 
 	};
+	
+	
+	Handler seeAllTickets = (ctx) ->{
+		if (tempRole != null) {
+			if (sess.getAttribute("role").equals("manager")) {
+				ctx.json(ticketService.seeAllTickets());
+			}else {
+				ctx.json("Must be logged into a manger account for this function!");
+			}
+		}else {
+			ctx.json("Must be logged into a manger account for this function!");
+		}
+		
+	};
 
 	@Override
 	public void addRoutes(Javalin app) {
@@ -276,6 +290,7 @@ public class UserAndTicketController implements Controller {
 		app.get("/approvedtickets", seeMyApprovedTickets); // done
 		app.get("/declinedtickets", seeMyDeclinedTickets); // done
 		app.patch("/decideonticket", updateTicketStatus); // done
+		app.get("/alltickets", seeAllTickets);
 
 	}
 

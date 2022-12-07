@@ -8,9 +8,23 @@ public class Ticket {
 	private String description;
 	private String status;
 	private String timeCreated;
+	private String timeDecided;
 	
 	
 	
+	
+	public Ticket(int ticketid, String reimbursementType, double amount, String description, String status,
+			String timeCreated, String timeDecided) {
+		super();
+		this.ticketid = ticketid;
+		this.reimbursementType = reimbursementType;
+		this.amount = amount;
+		this.description = description;
+		this.status = status;
+		this.timeCreated = timeCreated;
+		this.timeDecided = timeDecided;
+	}
+
 	public Ticket(int ticketid, String reimbursementType, double amount, String description, String status, String timeCreated) {
 		super();
 		this.ticketid = ticketid;
@@ -105,6 +119,17 @@ public class Ticket {
 
 	public void setUserid(int userId) {
 		this.userid = userId;
+	}
+	
+	
+	
+
+	public String getTimeDecided() {
+		return timeDecided;
+	}
+
+	public void setTimeDecided(String timeDecided) {
+		this.timeDecided = timeDecided;
 	}
 
 	@Override

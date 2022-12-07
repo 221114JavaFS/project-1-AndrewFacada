@@ -89,6 +89,10 @@ View My Declined Tickets
 GET http://localhost:8085/declinedtickets (port may vary)
 
 
+See All Tickets (Only able to if Manager)
+GET http://localhost:8085/alltickets
+
+
 Make Decisions On Pending Tickets (Only able to if Manager)
 PATCH http://localhost:8085/decideonticket (port may vary)
 {

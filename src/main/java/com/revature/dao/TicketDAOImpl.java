@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,10 @@ public class TicketDAOImpl implements TicketDAO{
 				ticket.setDescription(result.getString("description"));
 				ticket.setStatus(result.getString("status"));
 				ticket.setTimeCreated(result.getString("ticket_created"));
+				
+				if(result.getString("updates_upon_decision") != null) {
+					ticket.setTimeDecided(result.getString("updates_upon_decision"));
+				}
 				
 				list.add(ticket); //adds ticket object to list
 			}
@@ -132,6 +137,7 @@ public class TicketDAOImpl implements TicketDAO{
 			List<Ticket> list = new ArrayList<>(); //new list for ticket
 			while(result.next()) {
 				Ticket ticket = new Ticket(); //creates new ticket object
+				ticket.setUserid(result.getInt("user_id"));
 				ticket.setTicketid(result.getInt("ticket_id"));
 				ticket.setReimbursementType(result.getString("reimbursement_type"));
 				ticket.setAmount(result.getDouble("reimbursement_amount"));
@@ -165,12 +171,14 @@ public class TicketDAOImpl implements TicketDAO{
 			List<Ticket> list = new ArrayList<>(); //new list for ticket
 			while(result.next()) {
 				Ticket ticket = new Ticket(); //creates new ticket object
+				ticket.setUserid(result.getInt("user_id"));
 				ticket.setTicketid(result.getInt("ticket_id"));
 				ticket.setReimbursementType(result.getString("reimbursement_type"));
 				ticket.setAmount(result.getDouble("reimbursement_amount"));
 				ticket.setDescription(result.getString("description"));
 				ticket.setStatus(result.getString("status"));
 				ticket.setTimeCreated(result.getString("ticket_created"));
+				ticket.setTimeDecided(result.getString("updates_upon_decision"));
 				
 				list.add(ticket); //adds ticket to list
 			}
@@ -198,12 +206,14 @@ public class TicketDAOImpl implements TicketDAO{
 			List<Ticket> list = new ArrayList<>(); //new list for ticket
 			while(result.next()) {
 				Ticket ticket = new Ticket(); //creates new ticket object
+				ticket.setUserid(result.getInt("user_id"));
 				ticket.setTicketid(result.getInt("ticket_id"));
 				ticket.setReimbursementType(result.getString("reimbursement_type"));
 				ticket.setAmount(result.getDouble("reimbursement_amount"));
 				ticket.setDescription(result.getString("description"));
 				ticket.setStatus(result.getString("status"));
 				ticket.setTimeCreated(result.getString("ticket_created"));
+				ticket.setTimeDecided(result.getString("updates_upon_decision"));
 				
 				list.add(ticket); //adds ticket to list
 			}
@@ -218,5 +228,50 @@ public class TicketDAOImpl implements TicketDAO{
 			return null;
 		}
 	}
+
+
+
+	@Override
+	public List<Ticket> findAllTickets() {
+		try(Connection connection = ConnectionUtil.getConnection()){
+			String sql = "SELECT * FROM ticket;";
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			
+			List<Ticket> list = new ArrayList<>();
+			
+			while(result.next()) {
+				Ticket ticket = new Ticket();
+				ticket.setUserid(result.getInt("user_id"));
+				ticket.setTicketid(result.getInt("ticket_id"));
+				ticket.setReimbursementType(result.getString("reimbursement_type"));
+				ticket.setAmount(result.getDouble("reimbursement_amount"));
+				ticket.setDescription(result.getString("description"));
+				ticket.setStatus(result.getString("status"));
+				ticket.setTimeCreated(result.getString("ticket_created"));
+				
+				if(result.getString("updates_upon_decision") != null) {
+					ticket.setTimeDecided(result.getString("updates_upon_decision"));
+				}
+				
+				list.add(ticket);
+			}
+			
+			if(list.isEmpty()) {
+				return null;
+			}
+			
+			return list;
+			
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+	}
+		
+		
+	}
+
+	
 
 }

@@ -8,6 +8,8 @@ public interface TicketDAO {
 	
 	public abstract List<Ticket> findAllMyTickets(int id); //done
 	
+	public abstract List<Ticket> findAllTickets();
+	
 	public abstract List<Ticket> findMyPendingTickets(int id); //done
 	
 	public abstract List<Ticket> findMyApprovedTickets(int id); //done

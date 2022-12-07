@@ -34,6 +34,9 @@ public class TicketService {
 		return ticketDao.decideOnTicket(ticket, id);
 	}
 	
+	public List<Ticket> seeAllTickets(){
+		return ticketDao.findAllTickets();
+	}
 	
 
 
