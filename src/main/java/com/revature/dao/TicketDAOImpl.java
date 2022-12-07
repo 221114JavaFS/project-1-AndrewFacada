@@ -238,7 +238,7 @@ public class TicketDAOImpl implements TicketDAO{
 			Statement statement = connection.createStatement();
 			ResultSet result = statement.executeQuery(sql);
 			
-			List<Ticket> list = new ArrayList<>();
+			List<Ticket> list = new ArrayList<>(); //Creates list to return all ticket objects
 			
 			while(result.next()) {
 				Ticket ticket = new Ticket();
@@ -250,11 +250,11 @@ public class TicketDAOImpl implements TicketDAO{
 				ticket.setStatus(result.getString("status"));
 				ticket.setTimeCreated(result.getString("ticket_created"));
 				
-				if(result.getString("updates_upon_decision") != null) {
+				if(result.getString("updates_upon_decision") != null) { //if decided up, adds time decided on
 					ticket.setTimeDecided(result.getString("updates_upon_decision"));
 				}
 				
-				list.add(ticket);
+				list.add(ticket); //returns list of ticket objects
 			}
 			
 			if(list.isEmpty()) {

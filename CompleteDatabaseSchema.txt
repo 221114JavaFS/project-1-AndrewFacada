@@ -22,7 +22,7 @@ CREATE TABLE ticket (
 );
 
 INSERT INTO user_info(email, passw, first_name, last_name, address, role, created_on) VALUES
-	('andrewfacada@gmail.com', 'strongpassword', 'Andrew', 'Facada', '123 Main st. Bridgewater MA', 'manager', now());
+	('ManagerEmail@gmail.com', 'strongpassword', 'Andrew', 'Facada', '123 Main st. Bridgewater MA', 'manager', now());
 
 INSERT INTO ticket(user_id, reimbursement_type, reimbursement_amount, ticket_created) VALUES
 	(1, 'gas', 25.30, now());

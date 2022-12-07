@@ -262,9 +262,9 @@ public class UserAndTicketController implements Controller {
 	
 	
 	Handler seeAllTickets = (ctx) ->{
-		if (tempRole != null) {
-			if (sess.getAttribute("role").equals("manager")) {
-				ctx.json(ticketService.seeAllTickets());
+		if (tempRole != null) { //makes sure logged in
+			if (sess.getAttribute("role").equals("manager")) { //makes sure logged into manager account
+				ctx.json(ticketService.seeAllTickets()); //returns all tickets
 			}else {
 				ctx.json("Must be logged into a manger account for this function!");
 			}
@@ -290,7 +290,7 @@ public class UserAndTicketController implements Controller {
 		app.get("/approvedtickets", seeMyApprovedTickets); // done
 		app.get("/declinedtickets", seeMyDeclinedTickets); // done
 		app.patch("/decideonticket", updateTicketStatus); // done
-		app.get("/alltickets", seeAllTickets);
+		app.get("/alltickets", seeAllTickets); //done
 
 	}
 
