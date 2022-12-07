@@ -26,7 +26,7 @@ public class TicketDAOImpl implements TicketDAO{
 			
 			while(result.next()) {
 				Ticket ticket = new Ticket(); //new ticket object
-				
+				ticket.setUserid(result.getInt("user_id"));
 				ticket.setTicketid(result.getInt("ticket_id"));
 				ticket.setReimbursementType(result.getString("reimbursement_type"));
 				ticket.setAmount(result.getDouble("reimbursement_amount"));

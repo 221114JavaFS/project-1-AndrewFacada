@@ -12,7 +12,7 @@ public class App {
 	public static void main(String[] args) {
 		app = Javalin.create();
 		configure(new UserAndTicketController());
-		app.start(8086);
+		app.start(8085);
 
 	}
 	

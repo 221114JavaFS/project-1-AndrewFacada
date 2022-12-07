@@ -23,21 +23,18 @@ public class UserAndTicketController implements Controller {
 
 	// USER
 	Handler allUsers = (ctx) -> { //for manager t see all current users
-		if (tempRole == null) {
-
-			if (tempRole != null && sess.getAttribute("role").equals("employee")) {  //makes sure manager is logged in
-				String temp = "You must be signed into a manager account to be able to view all users!";
+		if (tempRole != null && sess.getAttribute("role").equals("manager")) {  //makes sure manager is logged in
+				List<User> list = userService.getAllUsers(); //returns list of all users
+				ctx.json(list);
+				ctx.status(200);
+			}else {
+				String temp = "You must be signed into a manager account to view all users!";
 				ctx.json(temp);
 			}
 
-			String temp = "You must be signed into a manager account to view all users!";
-			ctx.json(temp);
+			
 
-		} else {
-			List<User> list = userService.getAllUsers(); //returns list of all users
-			ctx.json(list);
-			ctx.status(200);
-		}
+		
 
 	};
 
@@ -277,20 +274,20 @@ public class UserAndTicketController implements Controller {
 	@Override
 	public void addRoutes(Javalin app) {
 		// USER
-		app.get("/users", allUsers); // done
-		app.get("/login", login); // done
-		app.get("/signout", signout); // done
-		app.get("/session", session); // done
+		app.get("/users", allUsers); // done 
+		app.get("/login", login); // done 
+		app.get("/signout", signout); // done 
+		app.get("/session", session); // done 
 		app.post("/newuser", newUser); // done
-		app.patch("/promote", roleUpdate); // done
+		app.patch("/promote", roleUpdate); // done 
 		// TICKET
-		app.get("/mytickets", checkMyTickets); // done
-		app.post("/createticket", createTicket); // done
-		app.get("/pendingtickets", seeMyPendingTickets); // done
-		app.get("/approvedtickets", seeMyApprovedTickets); // done
-		app.get("/declinedtickets", seeMyDeclinedTickets); // done
-		app.patch("/decideonticket", updateTicketStatus); // done
-		app.get("/alltickets", seeAllTickets); //done
+		app.get("/mytickets", checkMyTickets); // done 
+		app.post("/createticket", createTicket); // done 
+		app.get("/pendingtickets", seeMyPendingTickets); // done 
+		app.get("/approvedtickets", seeMyApprovedTickets); // done 
+		app.get("/declinedtickets", seeMyDeclinedTickets); // done 
+		app.patch("/decideonticket", updateTicketStatus); // done 
+		app.get("/alltickets", seeAllTickets); //done 
 
 	}
 
