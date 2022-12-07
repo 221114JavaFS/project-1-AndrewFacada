@@ -22,10 +22,10 @@ public class UserAndTicketController implements Controller {
 	private TicketService ticketService = new TicketService();
 
 	// USER
-	Handler allUsers = (ctx) -> {
+	Handler allUsers = (ctx) -> { //for manager t see all current users
 		if (tempRole == null) {
 
-			if (tempRole != null && sess.getAttribute("role").equals("employee")) {
+			if (tempRole != null && sess.getAttribute("role").equals("employee")) {  //makes sure manager is logged in
 				String temp = "You must be signed into a manager account to be able to view all users!";
 				ctx.json(temp);
 			}
@@ -34,7 +34,7 @@ public class UserAndTicketController implements Controller {
 			ctx.json(temp);
 
 		} else {
-			List<User> list = userService.getAllUsers();
+			List<User> list = userService.getAllUsers(); //returns list of all users
 			ctx.json(list);
 			ctx.status(200);
 		}
@@ -45,11 +45,11 @@ public class UserAndTicketController implements Controller {
 	Handler login = (ctx) -> { // need to make it so cannot login when already logged in
 		User u = ctx.bodyAsClass(User.class);
 
-		if (u.getEmail().isEmpty() || u.getPassword().isEmpty()) {
+		if (u.getEmail().isEmpty() || u.getPassword().isEmpty()) { //makes sure fields are not empty
 			ctx.json("Email and password fields cannot be empty!");
 		} else {
 
-			if (userService.loggingIn(u) != null) {
+			if (userService.loggingIn(u) != null) { //sets session attributes if successful login
 				sess = ctx.req().getSession();
 				tempEmail = "not null";
 				tempRole = "not null";
@@ -73,7 +73,7 @@ public class UserAndTicketController implements Controller {
 	};
 
 	// USER
-	Handler signout = (ctx) -> {
+	Handler signout = (ctx) -> {  //signs out current user and sets all session attributes to null
 		if (tempEmail != null) {
 			ctx.json("Successfully signed out of: " + sess.getAttribute("email"));
 			sess.setAttribute("id", null);
@@ -91,12 +91,12 @@ public class UserAndTicketController implements Controller {
 	};
 
 	// USER
-	Handler session = (ctx) -> {
+	Handler session = (ctx) -> {  //can view who is currently logged in
 		if (tempEmail == null) {
 			ctx.json("No one is currently signed in!");
 			// ctx.status(); find correct status
 		} else {
-			ctx.json("Signed in as " + sess.getAttribute("firstName") + " " + sess.getAttribute("lastName")
+			ctx.json("Signed in as " + sess.getAttribute("firstName") + " " + sess.getAttribute("lastName") //displays current session
 					+ " with the role of " + sess.getAttribute("role") + " under the email: "
 					+ sess.getAttribute("email"));
 			ctx.status(200);
@@ -105,15 +105,15 @@ public class UserAndTicketController implements Controller {
 	};
 
 	// USER
-	Handler newUser = (ctx) -> {
+	Handler newUser = (ctx) -> { //creates new user
 		User u = ctx.bodyAsClass(User.class);
 
-		if (u.getEmail().isEmpty() || u.getPassword().isEmpty() || u.getFirstName().isEmpty()
+		if (u.getEmail().isEmpty() || u.getPassword().isEmpty() || u.getFirstName().isEmpty() //makes sure fields are not empty
 				|| u.getLastName().isEmpty() || u.getAddress().isEmpty()) {
 			ctx.json("All fields must be filled in!");
 		} else {
-			boolean createdOrNot = userService.newAccount(u);
-			if (createdOrNot == false) {
+			boolean createdOrNot = userService.newAccount(u); 
+			if (createdOrNot == false) {                                      //lets you know if new account created
 				String temp = "An account already exists with that email!";
 				ctx.json(temp);
 				ctx.status(400);
@@ -126,14 +126,14 @@ public class UserAndTicketController implements Controller {
 	};
 
 	// USER
-	Handler roleUpdate = (ctx) -> {
+	Handler roleUpdate = (ctx) -> {  //lets managers update roles of employees to managers
 		User u = ctx.bodyAsClass(User.class);
-		if (u.getEmail().isEmpty() || u.getRole().isEmpty() || u.getId() <= 0) {
+		if (u.getEmail().isEmpty() || u.getRole().isEmpty() || u.getId() <= 0) { //makes sure fields are not empty
 			ctx.json("All fields must be filled in!");
 		} else {
 			if (tempRole != null) {
 
-				if (sess.getAttribute("role").equals("manager")) {
+				if (sess.getAttribute("role").equals("manager")) { //makes sure a manager is attempting role update
 
 					User updatedUser = userService.promoteRole(u);
 
@@ -157,14 +157,14 @@ public class UserAndTicketController implements Controller {
 
 	};
 
-	Handler checkMyTickets = (ctx) -> {
+	Handler checkMyTickets = (ctx) -> { //checks if user has created any tickets
 		if (tempRole != null) {
 
 			if (sess.getAttribute("id") != null) {
 
 				int id = (int) sess.getAttribute("id");
 
-				if (ticketService.seeMyTickets(id) != null) {
+				if (ticketService.seeMyTickets(id) != null) { //returns list of all tickets
 					ctx.json(ticketService.seeMyTickets(id));
 
 				} else {
@@ -180,9 +180,9 @@ public class UserAndTicketController implements Controller {
 		}
 	};
 
-	Handler createTicket = (ctx) -> { // need to limit and check if fields are filled
+	Handler createTicket = (ctx) -> { // creates new ticket
 		Ticket ticket = ctx.bodyAsClass(Ticket.class);
-		if (ticket.getReimbursementType().isEmpty() || ticket.getAmount() <= 0 || ticket.getDescription().isEmpty()) {
+		if (ticket.getReimbursementType().isEmpty() || ticket.getAmount() <= 0 || ticket.getDescription().isEmpty()) { //makes sure all fields are filled
 			ctx.json("All fields must be filled in!");
 		} else {
 			int id = (int) sess.getAttribute("id");
@@ -190,7 +190,7 @@ public class UserAndTicketController implements Controller {
 		}
 	};
 
-	Handler seeMyPendingTickets = (ctx) -> {
+	Handler seeMyPendingTickets = (ctx) -> { //allows users to see their pending tickets if they have any
 		if (tempRole != null) {
 			if (sess.getAttribute("id") != null) {
 				int id = (int) sess.getAttribute("id");
@@ -206,7 +206,7 @@ public class UserAndTicketController implements Controller {
 		}
 	};
 
-	Handler seeMyApprovedTickets = (ctx) -> {
+	Handler seeMyApprovedTickets = (ctx) -> {  //allows users to see their approved tickets if they have any
 		if (tempRole != null) {
 			if (sess.getAttribute("id") != null) {
 				int id = (int) sess.getAttribute("id");
@@ -222,7 +222,7 @@ public class UserAndTicketController implements Controller {
 		}
 	};
 
-	Handler seeMyDeclinedTickets = (ctx) -> {
+	Handler seeMyDeclinedTickets = (ctx) -> { //allows users to see their declined tickets if they have any
 		if (tempRole != null) {
 			if (sess.getAttribute("id") != null) {
 				int id = (int) sess.getAttribute("id");
@@ -238,19 +238,17 @@ public class UserAndTicketController implements Controller {
 		}
 	};
 
-	Handler updateTicketStatus = (ctx) -> {
+	Handler updateTicketStatus = (ctx) -> { //allows managers to approve/deny tickets (cannot update already decided on tickets (through ticketDAOImp))
 		Ticket ticket = ctx.bodyAsClass(Ticket.class);
-		if (ticket.getTicketid() <= 0 || ticket.getStatus().isEmpty()) {
+		if (ticket.getTicketid() <= 0 || ticket.getStatus().isEmpty()) { //makes sure fields are not empty
 			ctx.json("All fields must be filled in!");
 		} else {
-			if (tempRole != null) {
-				if (sess.getAttribute("role").equals("manager")) {
-					if (sess.getAttribute("id").equals(ticket.getUserid())) {
-						ctx.json("You cannot update the status of your own tickets!");
-					} else {
-						int id = (int) sess.getAttribute("id");
-						ctx.json(ticketService.makeDecisionOnTicket(ticket, id));
-					}
+			if (tempRole != null) { //makes sure someone is logged in
+				if (sess.getAttribute("role").equals("manager")) { //makes sure a manager is logged in
+					
+					int id = (int) sess.getAttribute("id");
+					ctx.json(ticketService.makeDecisionOnTicket(ticket, id));
+					
 
 				} else {
 					ctx.json("You must be logged in to a manager account to be able to update the status of tickets!");

@@ -15,16 +15,16 @@ import com.revature.util.ConnectionUtil;
 public class UserDAOImpl implements UserDAO{
 
 	@Override
-	public List<User> findAllUsers() { //WORKS
+	public List<User> findAllUsers() {  //Lets managers see all users 
 		try(Connection connection = ConnectionUtil.getConnection()){
 			String sql = "Select user_id, email, first_name, last_name, address, role FROM user_info;";
 			Statement statement = connection.createStatement();
 			ResultSet result = statement.executeQuery(sql);
 			
-			List<User> list = new ArrayList<>();
+			List<User> list = new ArrayList<>(); //creates new list for user objects
 			
 			while(result.next()) {
-				User u = new User(
+				User u = new User( 
 						result.getInt("user_id"),
 						result.getString("email"),
 						result.getString("first_name"),
@@ -33,9 +33,9 @@ public class UserDAOImpl implements UserDAO{
 						result.getString("role")
 						);
 				
-						list.add(u);
+						list.add(u); //adds user object to list
 			}
-			return list;
+			return list; //returns list of user object
 			
 			
 			
@@ -48,7 +48,7 @@ public class UserDAOImpl implements UserDAO{
 	
 	
 	@Override
-	public User login(User user) { //WORKS
+	public User login(User user) { //Allows users to login 
 		try(Connection connection = ConnectionUtil.getConnection()){
 			
 			PreparedStatement statement =  connection.prepareStatement("Select user_id, email, passw, first_name, last_name, role FROM user_info WHERE email = ? AND passw = ?;");
@@ -57,7 +57,8 @@ public class UserDAOImpl implements UserDAO{
 			ResultSet result = statement.executeQuery();
 			
 			
-			User a = new User();
+			User a = new User(); //creates new object to return logged in user if credentials are correct
+			//confirms that user exists and has been provided correct credentials 
 			if(result.next()) {
 				a.setId(result.getInt("user_id"));
 				a.setEmail(result.getString("email"));
@@ -67,9 +68,9 @@ public class UserDAOImpl implements UserDAO{
 				
 				
 				
-				return a;
+				return a; //returns user object if credentials matched
 			}else {
-				return null;
+				return null; //returns null if credentials did not match
 			}
 			
 			
@@ -109,7 +110,7 @@ public class UserDAOImpl implements UserDAO{
 
 
 	@Override
-	public User updateRole(User user) {
+	public User updateRole(User user) { //allows managers to update role of employees, but cannot revert manager to employee
 		try(Connection connection = ConnectionUtil.getConnection()){
 			PreparedStatement statement = connection.prepareStatement("SELECT email, role FROM user_info WHERE email = ? AND role = ?;");
 			statement.setString(1, user.getEmail());
@@ -121,14 +122,14 @@ public class UserDAOImpl implements UserDAO{
 				statementTwo.setString(1, user.getEmail());
 				int  resultTwo = statementTwo.executeUpdate();
 				
-				User a = new User();
+				User a = new User(); //creates new user object for employee that has been updated to manager
 				a.setEmail(user.getEmail());
 				a.setRole("manager");
 				
-				return a;
+				return a; //returns new manager
 			}
 			
-			return null;
+			return null; //if it does not work or already manager
 		}catch(SQLException e) {
 			e.printStackTrace();
 			return null;

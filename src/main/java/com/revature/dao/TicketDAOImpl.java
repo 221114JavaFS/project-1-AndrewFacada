@@ -14,17 +14,17 @@ import com.revature.util.ConnectionUtil;
 public class TicketDAOImpl implements TicketDAO{
 
 	@Override
-	public List<Ticket> findAllMyTickets(int id) {
+	public List<Ticket> findAllMyTickets(int id) { //lets user see all tickets
 		try(Connection connection = ConnectionUtil.getConnection()){
 			PreparedStatement statement = connection.prepareStatement("SELECT * FROM ticket WHERE user_id = ?;");
 			statement.setInt(1, id);
 			ResultSet result = statement.executeQuery();
 			
 			
-			List<Ticket> list = new ArrayList<>();
+			List<Ticket> list = new ArrayList<>(); //new list for tickets
 			
 			while(result.next()) {
-				Ticket ticket = new Ticket();
+				Ticket ticket = new Ticket(); //new ticket object
 				
 				ticket.setTicketid(result.getInt("ticket_id"));
 				ticket.setReimbursementType(result.getString("reimbursement_type"));
@@ -33,14 +33,14 @@ public class TicketDAOImpl implements TicketDAO{
 				ticket.setStatus(result.getString("status"));
 				ticket.setTimeCreated(result.getString("ticket_created"));
 				
-				list.add(ticket);
+				list.add(ticket); //adds ticket object to list
 			}
 			
 			if(list.isEmpty()) {
 				return null;
 			}
 			
-			return list;
+			return list; //returns list of tickets
 			
 			
 			
@@ -53,7 +53,7 @@ public class TicketDAOImpl implements TicketDAO{
 	
 	
 	@Override
-	public String createTicket(Ticket ticket, int id) {
+	public String createTicket(Ticket ticket, int id) { //for creating new ticket
 		try(Connection connection = ConnectionUtil.getConnection()){
 			PreparedStatement statement = connection.prepareStatement("INSERT INTO ticket(user_id, reimbursement_type, reimbursement_amount, description , ticket_created) VALUES (?, ?, ?, ?, now());");
 			statement.setInt(1,id);
@@ -72,16 +72,29 @@ public class TicketDAOImpl implements TicketDAO{
 	}
 
 	@Override
-	public String decideOnTicket(Ticket ticket, int id) {
+	public String decideOnTicket(Ticket ticket, int id) { // for manager to decide on tickets
 		try(Connection connection = ConnectionUtil.getConnection()){
+			//Checks to see if ticket exists
 			PreparedStatement statementCheckOne = connection.prepareStatement("SELECT * FROM ticket WHERE ticket_id = ?;");
 			statementCheckOne.setInt(1,ticket.getTicketid());
 			ResultSet resultOne = statementCheckOne.executeQuery();
 			if(!resultOne.next()) {
 				return "There are no tickets with that ticket id!";
+				
+			}
+			
+			//Makes sure manager cannot update status of own ticket
+			PreparedStatement statementCheckIfDecidingOnOwnTicket = connection.prepareStatement("SELECT user_id FROM ticket WHERE ticket_id = ? AND user_id = ?;");
+			statementCheckIfDecidingOnOwnTicket.setInt(1, ticket.getTicketid());
+			statementCheckIfDecidingOnOwnTicket.setInt(2, id);
+			ResultSet  resultForOwnTicket = statementCheckIfDecidingOnOwnTicket.executeQuery();
+			if(resultForOwnTicket.next()) {
+				return "Cannot update your own tickets!";
+				
 			}
 			
 			
+			//checks to see if ticket already decided on
 			PreparedStatement statementCheckTwo = connection.prepareStatement("SELECT status FROM ticket WHERE ticket_id = ?;");
 			statementCheckTwo.setInt(1,ticket.getTicketid());
 			ResultSet resultTwo = statementCheckTwo.executeQuery();
@@ -91,7 +104,7 @@ public class TicketDAOImpl implements TicketDAO{
 				}
 			}
 			
-			
+			//ticket gets decided on
 			PreparedStatement statement = connection.prepareStatement("UPDATE ticket SET status = ?, updates_upon_decision = now() WHERE ticket_id = ?;");
 			statement.setString(1,ticket.getStatus());
 			statement.setInt(2,ticket.getTicketid());
@@ -110,15 +123,15 @@ public class TicketDAOImpl implements TicketDAO{
 
 
 	@Override
-	public List<Ticket> findMyPendingTickets(int id) {
+	public List<Ticket> findMyPendingTickets(int id) { //returns pending tickets for specific user (if any)
 		try(Connection connection = ConnectionUtil.getConnection()){
 			PreparedStatement statement = connection.prepareStatement("SELECT * FROM ticket WHERE user_id = ? AND status = 'pending';");
 			statement.setInt(1, id);
 			ResultSet result = statement.executeQuery();
 			
-			List<Ticket> list = new ArrayList<>();
+			List<Ticket> list = new ArrayList<>(); //new list for ticket
 			while(result.next()) {
-				Ticket ticket = new Ticket();
+				Ticket ticket = new Ticket(); //creates new ticket object
 				ticket.setTicketid(result.getInt("ticket_id"));
 				ticket.setReimbursementType(result.getString("reimbursement_type"));
 				ticket.setAmount(result.getDouble("reimbursement_amount"));
@@ -126,13 +139,13 @@ public class TicketDAOImpl implements TicketDAO{
 				ticket.setStatus(result.getString("status"));
 				ticket.setTimeCreated(result.getString("ticket_created"));
 				
-				list.add(ticket);
+				list.add(ticket); //adds ticket to list
 			}
 			
 			if(list.isEmpty()) {
 				return null;
 			}
-			return list;
+			return list; //returns list of tickets
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -143,15 +156,15 @@ public class TicketDAOImpl implements TicketDAO{
 
 
 	@Override
-	public List<Ticket> findMyApprovedTickets(int id) {
+	public List<Ticket> findMyApprovedTickets(int id) {  //returns approved tickets for specific user (if any)
 		try(Connection connection = ConnectionUtil.getConnection()){
 			PreparedStatement statement = connection.prepareStatement("SELECT * FROM ticket WHERE user_id = ? AND status = 'approved';");
 			statement.setInt(1, id);
 			ResultSet result = statement.executeQuery();
 			
-			List<Ticket> list = new ArrayList<>();
+			List<Ticket> list = new ArrayList<>(); //new list for ticket
 			while(result.next()) {
-				Ticket ticket = new Ticket();
+				Ticket ticket = new Ticket(); //creates new ticket object
 				ticket.setTicketid(result.getInt("ticket_id"));
 				ticket.setReimbursementType(result.getString("reimbursement_type"));
 				ticket.setAmount(result.getDouble("reimbursement_amount"));
@@ -159,13 +172,13 @@ public class TicketDAOImpl implements TicketDAO{
 				ticket.setStatus(result.getString("status"));
 				ticket.setTimeCreated(result.getString("ticket_created"));
 				
-				list.add(ticket);
+				list.add(ticket); //adds ticket to list
 			}
 			
 			if(list.isEmpty()) {
 				return null;
 			}
-			return list;
+			return list; //returns list of tickets
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -176,15 +189,15 @@ public class TicketDAOImpl implements TicketDAO{
 
 
 	@Override
-	public List<Ticket> findMyDeclinedTickets(int id) {
+	public List<Ticket> findMyDeclinedTickets(int id) { //returns declined tickets for specific user (if any)
 		try(Connection connection = ConnectionUtil.getConnection()){
 			PreparedStatement statement = connection.prepareStatement("SELECT * FROM ticket WHERE user_id = ? AND status = 'declined';");
 			statement.setInt(1, id);
 			ResultSet result = statement.executeQuery();
 			
-			List<Ticket> list = new ArrayList<>();
+			List<Ticket> list = new ArrayList<>(); //new list for ticket
 			while(result.next()) {
-				Ticket ticket = new Ticket();
+				Ticket ticket = new Ticket(); //creates new ticket object
 				ticket.setTicketid(result.getInt("ticket_id"));
 				ticket.setReimbursementType(result.getString("reimbursement_type"));
 				ticket.setAmount(result.getDouble("reimbursement_amount"));
@@ -192,13 +205,13 @@ public class TicketDAOImpl implements TicketDAO{
 				ticket.setStatus(result.getString("status"));
 				ticket.setTimeCreated(result.getString("ticket_created"));
 				
-				list.add(ticket);
+				list.add(ticket); //adds ticket to list
 			}
 			
 			if(list.isEmpty()) {
 				return null;
 			}
-			return list;
+			return list; //returns list of tickets
 			
 		}catch(SQLException e) {
 			e.printStackTrace();

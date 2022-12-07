@@ -67,9 +67,9 @@ GET http://localhost:8085/users (port may vary)
 Create New Ticket
 POST http://localhost:8085/createticket port may vary)
 {
-    "reimbursementType": "more Gas",
-    "amount": 1294.22,
-    "description": "Test"
+    "reimbursementType": "",
+    "amount": ,
+    "description": ""
 }
 
 
@@ -78,11 +78,11 @@ GET http://localhost:8085/mytickets (port may vary)
 
 
 View My Pending Tickets
-get http://localhost:8085/pendingtickets (port may vary)
+GET http://localhost:8085/pendingtickets (port may vary)
 
 
 View My Approved Tickets
-get http://localhost:8085/approvedtickets (port may vary)
+GET http://localhost:8085/approvedtickets (port may vary)
 
 
 View My Declined Tickets
